@@ -65,6 +65,18 @@ class Elementor_PostsDisclosure_Widget extends \Elementor\Widget_Base {
 				'classes' => 'num-posts',
 			]
 		);
+		$this->add_control(
+			'append_date',
+			[
+				'label' => esc_html( 'Append date to post title' ),
+				'type' => \Elementor\Controls_Manager::SWITCHER,
+				'label_on' => esc_html( 'Yes' ),
+				'label_off' => esc_html( 'No' ),
+				'return_value' => 'yes',
+				'default' => 'yes',
+				'classes' => 'append-date',
+			]
+		);
 		$this->end_controls_section();
 
 		$this->start_controls_section(
@@ -114,6 +126,7 @@ class Elementor_PostsDisclosure_Widget extends \Elementor\Widget_Base {
 		$settings = $this->get_settings_for_display();
 
 		$num_posts = $settings['num_posts'];
+		$append_date = $settings['append_date'];
 		
 		if ( is_admin() ) {
 		}
@@ -123,7 +136,8 @@ class Elementor_PostsDisclosure_Widget extends \Elementor\Widget_Base {
 		if ( $query->have_posts() ) {
 			while ( $query->have_posts() ) {
 				$query->the_post();
-				echo '<details><summary>' . esc_html( get_the_title() ) . ' ' . get_the_date() . '</summary>', get_the_content(), '</details>', "\n";
+				$date = $append_date ? ' ' . get_the_date() : '';
+				echo '<details><summary>' . esc_html( get_the_title() ) . $date . '</summary>', get_the_content(), '</details>', "\n";
 			}
 		} else {
 			esc_html_e( 'Sorry, no posts matched your criteria.' );
